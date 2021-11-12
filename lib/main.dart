@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'screens/table_form_screen.dart';
+import 'screens/bottom_nav_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : const TableFormScreen(),
+          : BottomNavScreen(),
     );
   }
 
