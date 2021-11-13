@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:coding_challenge/Models/driver.dart';
 import 'package:coding_challenge/providers/drivers_data_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,35 +13,45 @@ class TableFormScreen extends StatefulWidget {
 }
 
 class _TableFormScreenState extends State<TableFormScreen> {
-  late List<Driver> _driversList;
+  late List<Driver> _driversList = [];
   int? sortColumnIndex;
   bool isAscending = false;
+  late Timer timer;
 
   // @override
   // void initState() {
-  //   _driversList =
-  //       Provider.of<DriversDataProvider>(context, listen: false).items;
+  //   _driversList = Provider.of<DriversProvider>(context, listen: false).items;
+  //
+  //   Timer.periodic(const Duration(seconds: 5), (_) async {
+  //     await Provider.of<DriversProvider>(context, listen: false)
+  //         .fetchDriversData();
+  //
+  //     setState(() {
+  //       _driversList =
+  //           Provider.of<DriversProvider>(context, listen: false).items;
+  //     });
+  //   });
+  //
   //   super.initState();
   // }
 
   @override
-  void didChangeDependencies() {
-    _driversList =
-        Provider.of<DriversDataProvider>(context, listen: false).items;
-    super.didChangeDependencies();
-  }
+  Widget build(BuildContext context) {
+    _driversList = Provider.of<DriversProvider>(context, listen: false).data;
 
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          child: SingleChildScrollView(
+    return Scaffold(
+      body: _driversList.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              child: buildDataTable()),
-        ),
-      );
+              scrollDirection: Axis.horizontal,
+              child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  child: buildDataTable()),
+            ),
+    );
+  }
 
   Widget buildDataTable() {
     final columns = ['N.', 'Name', 'Language', 'Car'];

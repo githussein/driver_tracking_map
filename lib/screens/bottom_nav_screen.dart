@@ -1,3 +1,4 @@
+import 'package:coding_challenge/screens/map_screen.dart';
 import 'package:coding_challenge/screens/table_form_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -6,14 +7,15 @@ class BottomNavScreen extends StatefulWidget {
 
   @override
   _BottomNavScreenState createState() => _BottomNavScreenState();
-}A
+}
 
 class _BottomNavScreenState extends State<BottomNavScreen> {
   final List _screens = [
     const TableFormScreen(),
-    Scaffold(),
+    const MapScreen(),
   ];
   int _currentIndex = 0;
+  var navBarIcons = [Icons.event_note, Icons.location_on_rounded];
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
         selectedItemColor: Colors.white,
         // unselectedItemColor: Colors.grey,
         elevation: 8.0,
-        items: [Icons.event_note, Icons.location_on_rounded]
+        items: navBarIcons
             .asMap()
             .map((key, value) => MapEntry(
                   key,

@@ -1,8 +1,5 @@
 import 'package:coding_challenge/providers/drivers_data_provider.dart';
-import 'package:coding_challenge/screens/table_form_screen.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'screens/bottom_nav_screen.dart';
 
@@ -17,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => DriversDataProvider(),
+      create: (context) => DriversProvider(),
       child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
@@ -40,43 +37,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  void _fetchDataFromTheServer() async {
-    await Provider.of<DriversDataProvider>(context, listen: false)
-        .fetchDriversData();
-    setState(() {});
-    // final url = Uri.parse('http://192.168.0.103:3000');
-    // final response = await http.get(url);
-    //
-    // // print('Status: ${response.statusCode}, Length: ${response.contentLength}');
-    // extractedData = json.decode(response.body) as List;
-    // // for (int i = 0; i < 3; i++) {
-    // //   print(extractedData[i]);
-    // // }
-    // //
-    // setState(() {
-    //   print(extractedData.length);
-    // });
-  }
-
-  var _isInit = true;
   var _isLoading = false;
 
   @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
+  void initState() {
+    setState(() {
+      _isLoading = true;
+    });
 
-      //fetch drivers data
-      Provider.of<DriversDataProvider>(context).fetchDriversData().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
+    Provider.of<DriversProvider>(context, listen: false)
+        .fetchDriversData()
+        .then((_) {
+      setState(() {
+        _isLoading = false;
       });
-    }
-    _isInit = false;
-    super.didChangeDependencies();
+    });
+
+    super.initState();
   }
 
   @override
@@ -86,47 +63,16 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title, style: const TextStyle(color: Colors.white)),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : BottomNavScreen(),
-    );
-  }
-
-  Widget myListView() {
-    var driversData =
-        Provider.of<DriversDataProvider>(context, listen: false).items;
-    return driversData.isEmpty
-        ? const Center(child: CircularProgressIndicator())
-        : SingleChildScrollView(
-            child: Column(
-              children: [
-                Text('Objects: ${driversData.length}'),
-                ListView.builder(
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: driversData.length,
-                    itemBuilder: (context, index) => Column(
-                          children: [
-                            ListTile(
-                              leading: Text(
-                                driversData[index].driverName.toString(),
-                              ),
-                              title: Text(
-                                driversData[index].carMake.toString(),
-                              ),
-                              trailing: Text(
-                                driversData[index].driverLanguage.toString(),
-                              ),
-                            ),
-                            const Divider(height: 10, color: Colors.lightBlue)
-                          ],
-                        )),
+          ? Center(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Fetching data from the server...'),
               ],
-            ),
-            // floatingActionButton: FloatingActionButton(
-            //   onPressed: _fetchDataFromTheServer,
-            //   tooltip: 'Increment',
-            //   child: const Icon(Icons.cloud_download),
-            // ),
-          );
+            ))
+          : const BottomNavScreen(),
+    );
   }
 }

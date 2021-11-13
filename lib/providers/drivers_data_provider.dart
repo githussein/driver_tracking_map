@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../Models/driver.dart';
 
-class DriversDataProvider with ChangeNotifier {
+class DriversProvider with ChangeNotifier {
   List<Driver> _driversData = [];
 
-  List<Driver> get items {
+  List<Driver> get data {
     return [..._driversData]; //return a copy
   }
 

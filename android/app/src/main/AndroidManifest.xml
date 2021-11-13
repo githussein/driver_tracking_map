@@ -3,6 +3,10 @@
    <application
         android:label="coding_challenge"
         android:icon="@mipmap/ic_launcher">
+
+       <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="AIzaSyA1QcaWoEP4YqhP2378-tU4WLyNjnB4g1I"/>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
