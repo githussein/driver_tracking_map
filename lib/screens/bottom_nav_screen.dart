@@ -36,7 +36,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
             .map((key, value) => MapEntry(
                   key,
                   BottomNavigationBarItem(
-                    title: const Text(''),
+                    label: '',
                     icon: Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 6.0,

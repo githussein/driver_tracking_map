@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:coding_challenge/providers/drivers_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,6 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _isLoading = false;
       });
+    });
+
+    Timer.periodic(const Duration(seconds: 5), (_) {
+      Provider.of<DriversProvider>(context, listen: false).fetchDriversData();
     });
 
     super.initState();

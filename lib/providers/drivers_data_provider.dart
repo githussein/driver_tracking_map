@@ -21,8 +21,14 @@ class DriversProvider with ChangeNotifier {
       for (var driver in extractedData) {
         loadedCouponsList.add(Driver(
           driverName: driver['driverName'] ?? '',
+          driverCityOrigin: driver['driverCityOrigin'] ?? '',
           driverLanguage: driver['driverLanguage'] ?? '',
+          driverPhone: driver['driverPhone'] ?? '',
+          driverGender: driver['driverGender'] ?? '',
+          driverInfo: driver['driverInfo'] ?? '',
           carMake: driver['carMake'] ?? '',
+          kmDriven: driver['kmDriven'] ?? 0,
+          location: driver['location'] ?? ['000.000', '000.000'],
         ));
       }
 
