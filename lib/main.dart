@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:coding_challenge/providers/drivers_data_provider.dart';
+import 'package:coding_challenge/providers/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/bottom_nav_screen.dart';
@@ -68,17 +67,27 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title, style: const TextStyle(color: Colors.white)),
       ),
-      body: _isLoading
-          ? Center(
-              child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text('Fetching data from the server...'),
-              ],
-            ))
-          : const BottomNavScreen(),
+      body:
+          _isLoading ? const FetchingDataIndicator() : const BottomNavScreen(),
     );
+  }
+}
+
+class FetchingDataIndicator extends StatelessWidget {
+  const FetchingDataIndicator({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        CircularProgressIndicator(),
+        SizedBox(height: 16),
+        Text('Fetching data from the server...'),
+      ],
+    ));
   }
 }
