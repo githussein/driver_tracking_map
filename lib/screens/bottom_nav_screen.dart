@@ -14,7 +14,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     const TableFormScreen(),
     const MapScreen(),
   ];
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   var navBarIcons = [Icons.event_note, Icons.location_on_rounded];
 
   @override

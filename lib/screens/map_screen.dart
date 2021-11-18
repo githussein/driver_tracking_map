@@ -24,13 +24,13 @@ class _MapScreenState extends State<MapScreen> {
   int _index = 0;
 
   //a controller to manipulate the map
-  GoogleMapController? _controller;
+  late GoogleMapController _controller;
+  var _isControllerReady = false;
 
-  //initial location for the map
+  //initial location (Munich) required for the map
   double _latitude = 48.137154;
   double _longitude = 11.576124;
 
-  //initiate periodic updater
   @override
   void initState() {
     //snapshot of the current data
@@ -41,20 +41,22 @@ class _MapScreenState extends State<MapScreen> {
       _driversNames.add(driver.driverName);
     }
     _driversNames.sort();
-    _selectedDriver = _driversNames[2];
-    _updateDriver(_selectedDriver);
+    _selectedDriver = _driversNames[_index];
 
+    //update data every 5 seconds
     timer = Timer.periodic(const Duration(seconds: 5), (_) {
-      setState(() {
-        _latitude += 0.001;
-        _longitude -= 0.001;
-      });
+      Provider.of<DriversProvider>(context, listen: false)
+          .fetchDriversData()
+          .then((value) => setState(() {
+                _latitude = _driversList[_index].location[0];
+                _longitude = _driversList[_index].location[1];
+              }));
     });
 
     super.initState();
   }
 
-  //clean memory
+  //release memory when this object is removed
   @override
   void dispose() {
     timer.cancel();
@@ -63,14 +65,14 @@ class _MapScreenState extends State<MapScreen> {
 
   //method to update and animate map camera position
   Future<void> moveCamera() async {
-    _controller!.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: driverLocation, zoom: 12, tilt: 80)));
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: driverLocation, zoom: 10, tilt: 80)));
   }
 
   Future<void> _updateDriver(var newName) async {
     _index = _driversList.indexWhere((driver) => driver.driverName == newName);
-    _latitude = double.parse(_driversList[_index].location[0].substring(0, 6));
-    _longitude = double.parse(_driversList[_index].location[1].substring(0, 6));
+    _latitude = double.parse(_driversList[_index].location[0]);
+    _longitude = double.parse(_driversList[_index].location[1]);
 
     moveCamera();
   }
@@ -82,7 +84,7 @@ class _MapScreenState extends State<MapScreen> {
 
     //update driver location
     driverLocation = LatLng(_latitude, _longitude);
-    moveCamera();
+    if (_isControllerReady) moveCamera();
 
     return Stack(
       children: [
@@ -103,60 +105,60 @@ class _MapScreenState extends State<MapScreen> {
       infoWindow: InfoWindow(title: _selectedDriver),
     ));
 
-    return Scaffold(
-      body: GoogleMap(
-        markers: Set<Marker>.of(_markers),
-        initialCameraPosition: CameraPosition(target: driverLocation, zoom: 8),
-        myLocationButtonEnabled: false,
-        zoomControlsEnabled: false,
-        onMapCreated: (GoogleMapController controller) async {
-          //take the controller from the function and assign to the State variable
-          _controller = controller;
-          await moveCamera();
-        },
-      ),
+    return GoogleMap(
+      markers: Set<Marker>.of(_markers),
+      initialCameraPosition: CameraPosition(target: driverLocation, zoom: 9),
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: false,
+      onMapCreated: (GoogleMapController controller) async {
+        //take the controller from the function and assign to the State variable
+        _controller = controller;
+        _isControllerReady = true;
+        await moveCamera();
+      },
     );
   }
 
   //Widget of the dropdown button
   Widget dropdownButton() {
     return Align(
-        alignment: Alignment.bottomCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 20.0, right: 20),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            height: 50,
-            width: 200,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            child: DropdownButton<String>(
-              isExpanded: true,
-              underline: Container(),
-              hint: const Text('Select driver '),
-              icon: const Icon(Icons.keyboard_arrow_down),
-              // The list of options
-              items: _driversNames
-                  .map((items) => DropdownMenuItem(
-                        child: Text(
-                          items,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        value: items,
-                      ))
-                  .toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedDriver = newValue;
-                  _updateDriver(newValue);
-                });
-              },
-              value: _selectedDriver,
-            ),
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20.0, right: 20),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          height: 50,
+          width: 200,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
-        ));
+          child: DropdownButton<String>(
+            isExpanded: true,
+            underline: Container(),
+            hint: const Text('Select driver '),
+            icon: const Icon(Icons.keyboard_arrow_down),
+            // The list of options
+            items: _driversNames
+                .map((items) => DropdownMenuItem(
+                      child: Text(
+                        items,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      value: items,
+                    ))
+                .toList(),
+            onChanged: (newValue) {
+              setState(() {
+                _selectedDriver = newValue;
+                _updateDriver(newValue);
+              });
+            },
+            value: _selectedDriver,
+          ),
+        ),
+      ),
+    );
   }
 }
