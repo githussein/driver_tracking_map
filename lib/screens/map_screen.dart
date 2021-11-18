@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../Models/driver.dart';
-import '../providers/data_provider.dart';
+import '../providers/drivers_provider.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({required this.driverName, Key? key}) : super(key: key);
@@ -102,9 +102,11 @@ class _MapScreenState extends State<MapScreen> {
   Widget mapWidget() {
     final List<Marker> _markers = <Marker>[];
     _markers.add(Marker(
-      markerId: const MarkerId('id'),
+      markerId: MarkerId(_index.toString()),
       position: driverLocation,
-      infoWindow: InfoWindow(title: _selectedDriver),
+      infoWindow: InfoWindow(
+        title: _selectedDriver,
+      ),
     ));
 
     return GoogleMap(
@@ -112,11 +114,11 @@ class _MapScreenState extends State<MapScreen> {
       initialCameraPosition: CameraPosition(target: driverLocation, zoom: 9),
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
-      onMapCreated: (GoogleMapController controller) async {
+      onMapCreated: (GoogleMapController controller) {
         //take the controller from the function and assign to the State variable
         _controller = controller;
         _isControllerReady = true;
-        await moveCamera();
+        moveCamera();
       },
     );
   }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:coding_challenge/Models/driver.dart';
-import 'package:coding_challenge/providers/data_provider.dart';
+import 'package:coding_challenge/providers/drivers_provider.dart';
 import 'package:coding_challenge/screens/bottom_nav_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,11 +43,15 @@ class _TableFormScreenState extends State<TableFormScreen> {
       'Language',
       'Phone',
       'Car',
-      'Distance(km)'
+      'Distance (km)'
     ];
 
     return DataTable(
       showCheckboxColumn: false,
+      headingRowColor:
+          MaterialStateProperty.all<Color>(Theme.of(context).primaryColorLight),
+      columnSpacing: 8,
+      // dataRowHeight: 32,
       columns: getColumns(columns),
       rows: getRows(_driversList),
     );
@@ -75,7 +79,6 @@ class _TableFormScreenState extends State<TableFormScreen> {
         return DataRow(
             cells: getCells(cells),
             onSelectChanged: (selected) {
-              print('Row selected: ${driver.driverName}');
               Navigator.push(
                 context,
                 MaterialPageRoute(

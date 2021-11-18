@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
 import 'bottom_nav_screen.dart';
-import '../providers/data_provider.dart';
+import '../providers/drivers_provider.dart';
 import '../widgets/fetching_indicator_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -65,10 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: _isLoading
           ? const FetchingIndicator()
-          : const BottomNavScreen(
-              index: 0,
-              driverName: '',
-            ),
+          : const BottomNavScreen(index: 0, driverName: ''),
     );
   }
 }
