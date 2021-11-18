@@ -6,7 +6,8 @@ import '../Models/driver.dart';
 import '../providers/data_provider.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({required this.driverName, Key? key}) : super(key: key);
+  final String driverName;
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -41,7 +42,8 @@ class _MapScreenState extends State<MapScreen> {
       _driversNames.add(driver.driverName);
     }
     _driversNames.sort();
-    _selectedDriver = _driversNames[_index];
+    _selectedDriver =
+        widget.driverName == '' ? _driversNames[_index] : widget.driverName;
 
     //update data every 5 seconds
     timer = Timer.periodic(const Duration(seconds: 5), (_) {

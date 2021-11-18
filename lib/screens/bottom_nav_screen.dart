@@ -3,22 +3,33 @@ import 'package:coding_challenge/screens/table_form_screen.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavScreen extends StatefulWidget {
-  const BottomNavScreen({Key? key}) : super(key: key);
+  const BottomNavScreen(
+      {required this.index, required this.driverName, Key? key})
+      : super(key: key);
+  final int index;
+  final String driverName;
 
   @override
   _BottomNavScreenState createState() => _BottomNavScreenState();
 }
 
 class _BottomNavScreenState extends State<BottomNavScreen> {
-  final List _screens = [
-    const TableFormScreen(),
-    const MapScreen(),
-  ];
-  int _currentIndex = 1;
+  int _currentIndex = 0;
   var navBarIcons = [Icons.event_note, Icons.location_on_rounded];
 
   @override
+  void initState() {
+    _currentIndex = widget.index;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final List _screens = [
+      const TableFormScreen(),
+      MapScreen(driverName: widget.driverName),
+    ];
+
     return Scaffold(
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

@@ -63,7 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: _isLoading ? const FetchingIndicator() : const BottomNavScreen(),
+      body: _isLoading
+          ? const FetchingIndicator()
+          : const BottomNavScreen(
+              index: 0,
+              driverName: '',
+            ),
     );
   }
 }

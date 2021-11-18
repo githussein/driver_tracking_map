@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:coding_challenge/Models/driver.dart';
 import 'package:coding_challenge/providers/data_provider.dart';
+import 'package:coding_challenge/screens/bottom_nav_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,39 +19,20 @@ class _TableFormScreenState extends State<TableFormScreen> {
   bool isAscending = false;
   late Timer timer;
 
-  // @override
-  // void initState() {
-  //   _driversList = Provider.of<DriversProvider>(context, listen: false).items;
-  //
-  //   Timer.periodic(const Duration(seconds: 5), (_) async {
-  //     await Provider.of<DriversProvider>(context, listen: false)
-  //         .fetchDriversData();
-  //
-  //     setState(() {
-  //       _driversList =
-  //           Provider.of<DriversProvider>(context, listen: false).items;
-  //     });
-  //   });
-  //
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     _driversList = Provider.of<DriversProvider>(context, listen: false).data;
 
-    return Scaffold(
-      body: _driversList.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  child: makeTable()),
-            ),
-    );
+    return _driversList.isEmpty
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                child: makeTable()),
+          );
   }
 
   Widget makeTable() {
@@ -65,6 +47,7 @@ class _TableFormScreenState extends State<TableFormScreen> {
     ];
 
     return DataTable(
+      showCheckboxColumn: false,
       columns: getColumns(columns),
       rows: getRows(_driversList),
     );
@@ -89,7 +72,17 @@ class _TableFormScreenState extends State<TableFormScreen> {
           driver.kmDriven
         ];
 
-        return DataRow(cells: getCells(cells));
+        return DataRow(
+            cells: getCells(cells),
+            onSelectChanged: (selected) {
+              print('Row selected: ${driver.driverName}');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BottomNavScreen(
+                        index: 1, driverName: driver.driverName)),
+              );
+            });
       }).toList();
 
   //Cells
