@@ -68,7 +68,7 @@ class _MapScreenState extends State<MapScreen> {
   //method to update and animate map camera position
   Future<void> moveCamera() async {
     _controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: driverLocation, zoom: 10, tilt: 80)));
+        CameraPosition(target: driverLocation, zoom: 8, tilt: 80)));
   }
 
   Future<void> _updateDriver(var newName) async {
@@ -118,7 +118,6 @@ class _MapScreenState extends State<MapScreen> {
         //take the controller from the function and assign to the State variable
         _controller = controller;
         _isControllerReady = true;
-        moveCamera();
       },
     );
   }
