@@ -5,8 +5,8 @@
 The application contains 2 screens that can be navigated through the bottom navigation bar.
 The first screen represents the drivers data in a table form, while the second screen displays
 a map with a marker showing the live driver location. The driver could be selected using the
-dropdown button at the bottom of the screen. Clicking on a driver's row in the tables screen 
-navigates to the drivers location in maps screen.
+dropdown button at the bottom of the screen. Clicking on a driver's row in the Table Form 
+Screen navigates to the drivers location in Maps Screen.
 
 ## Project files
 
