@@ -7,6 +7,17 @@ The first screen represents the drivers data in a table form, while the second s
 a map with a marker showing the live driver location. The driver could be selected using the
 dropdown button at the bottom of the screen.
 
+## What is new
+
+- Automatic camera mode.
+Auto mode on: The camera should automatically move and follow the location changes.
+Auto mode off: another button appears and the user can use gestures (such as rotate the map,
+one/two fingers tap, two finger pinch/stretch), and clicking that button moves the centralizes
+the screen again to the driver location.
+
+- Clicking on a driver's row in the Table Form Screen navigates to the drivers location in
+Maps Screen.
+
 ## Project files
 
 Dart code of Flutter projects is written mainly in /lib folder.

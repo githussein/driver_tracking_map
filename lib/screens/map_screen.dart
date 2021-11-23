@@ -27,6 +27,7 @@ class _MapScreenState extends State<MapScreen> {
   //a controller to manipulate the map
   late GoogleMapController _controller;
   var _isControllerReady = false;
+  var _isAuto = true; //automatically move the camera
 
   //initial location (Munich) required for the map
   double _latitude = 48.137154;
@@ -68,7 +69,7 @@ class _MapScreenState extends State<MapScreen> {
   //method to update and animate map camera position
   Future<void> moveCamera() async {
     _controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: driverLocation, zoom: 8, tilt: 80)));
+        CameraPosition(target: driverLocation, zoom: 9, tilt: 80)));
   }
 
   Future<void> _updateDriver(var newName) async {
@@ -86,13 +87,40 @@ class _MapScreenState extends State<MapScreen> {
 
     //update driver location
     driverLocation = LatLng(_latitude, _longitude);
-    if (_isControllerReady) moveCamera();
+    if (_isControllerReady && _isAuto) moveCamera();
 
-    return Stack(
-      children: [
-        mapWidget(),
-        if (_driversNames.isNotEmpty) dropdownButton(),
-      ],
+    return Scaffold(
+      body: Stack(
+        children: [
+          mapWidget(),
+          if (_driversNames.isNotEmpty) dropdownButton(),
+        ],
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (!_isAuto)
+            FloatingActionButton(
+              onPressed: moveCamera,
+              backgroundColor: Colors.lightBlue,
+              tooltip: 'reposition',
+              child: const Icon(
+                Icons.my_location,
+                color: Colors.white,
+              ),
+            ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            onPressed: () => setState(() => _isAuto = !_isAuto),
+            backgroundColor: _isAuto ? Colors.lightBlue : Colors.grey,
+            tooltip: 'reposition',
+            child: const Icon(
+              Icons.brightness_auto,
+              // color: Colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
